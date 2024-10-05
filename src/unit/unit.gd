@@ -21,10 +21,13 @@ var max_health: int = 2
 var health: int = 2: set = _set_health
 var flash_tween: Tween
 
+var has_moved: bool = false
+var has_attacked: bool = false
+
 var is_active: bool:
 	get:
 		return health > 0
-
+		
 func _ready() -> void:
 	global_position = Navigation.snap_to_tile(global_position, true)
 	abilities_db.unit = self
@@ -51,6 +54,7 @@ func attack(ac: ActionInstance) -> void:
 		sprite.flip_h = false
 	
 	await sprite.animation_finished
+	has_attacked = true
 	attack_complete.emit()
 	sprite.play('idle')
 
@@ -71,7 +75,12 @@ func move_along_path(path: Array) -> void:
 		elif pcell.x > cell.x:
 			sprite.flip_h = false
 	await move_tween.finished
+	has_moved = true
 	movement_complete.emit()
+
+func finish_turn() -> void:
+	has_attacked = false
+	has_moved = false
 
 func get_attack_paths() -> Array:
 	return abilities_db.get_attack_paths()

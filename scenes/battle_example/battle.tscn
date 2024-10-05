@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/battle_example/battle.gd" id="1_g48xb"]
 [ext_resource type="TileSet" uid="uid://bhs3agn1mn0oo" path="res://src/maps/grass_open/grass_open_tileset.tres" id="2_4o5gu"]
-[ext_resource type="PackedScene" uid="uid://dik7k0k7k27bp" path="res://src/battle/nodes/units/units.tscn" id="2_5hg2x"]
+[ext_resource type="PackedScene" uid="uid://dik7k0k7k27bp" path="res://src/battle/units/units.tscn" id="2_5hg2x"]
 [ext_resource type="PackedScene" uid="uid://0r543lk32lwo" path="res://src/maps/highlights/cell_highlights.tscn" id="3_b2wmv"]
 [ext_resource type="PackedScene" uid="uid://bvh861ymx55wu" path="res://src/unit/unit.tscn" id="3_qxq8g"]
 [ext_resource type="Resource" uid="uid://dnye6eu2q8q5o" path="res://src/unit/definitions/archer.tres" id="6_bcf76"]

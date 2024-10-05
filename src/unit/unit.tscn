@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bvh861ymx55wu"]
 
 [ext_resource type="Script" path="res://src/unit/unit.gd" id="1_tvmcd"]
-[ext_resource type="PackedScene" uid="uid://cpfrnnid2o366" path="res://src/battle/nodes/units/components/abilities_db.tscn" id="3_swa4a"]
+[ext_resource type="PackedScene" uid="uid://cpfrnnid2o366" path="res://src/battle/units/components/abilities_db.tscn" id="3_swa4a"]
 [ext_resource type="SpriteFrames" uid="uid://b46mxr3vrqtys" path="res://src/unit/art/peasant/peasant_spriteframes.tres" id="3_viucn"]
 [ext_resource type="PackedScene" uid="uid://d2mr2sdov8rs5" path="res://src/unit/components/health_bar/health_bar.tscn" id="4_k8hat"]
 
