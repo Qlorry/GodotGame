@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3li2821r6mu7"]
+
+[ext_resource type="Script" path="res://src/battle/units/unit_group/player/player_controled_group.gd" id="1_ackeb"]
+
+[node name="Player-controled-group" type="Node2D"]
+script = ExtResource("1_ackeb")

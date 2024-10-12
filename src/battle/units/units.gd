@@ -1,14 +1,11 @@
 class_name UnitsContainer
 extends Node2D
 
-var groups: Array = []
-var progress: Array = []
+var groups: Array[BaseUnitGroup] = []
 	
-var current_group: Node
+var current_group: BaseUnitGroup
 var current_group_index: int = 0
-var current_unit_index: int = 0
-var current_unit: Unit
-var current_acs: Array
+var battle_in_progress = true
 
 func _ready() -> void:
 	for child in get_children():
@@ -16,130 +13,49 @@ func _ready() -> void:
 			groups.append(child)
 
 func start_battle() -> void:
-	current_group = groups[0]
-	_begin_turn()
+	current_group = groups[current_group_index]
+	current_group.activate_group()
 
 func get_active_units() -> Array[Unit]:
 	var units: Array[Unit] = []
 	
 	for group in groups:
-		for child in group.get_children():
-			if child.health > 0:
-				units.append(child)
+		units.append_array(group.get_active_units())
 	
 	return units
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		var cell = Navigation.world_to_cell(get_global_mouse_position())
-		var match_ac = null
-		for ac in current_acs:
-			if cell == ac.end_point:
-				match_ac = ac
-				break
-		if !current_unit.has_moved:
-			EventBus.show_move_path.emit(match_ac)
-			
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var cell = Navigation.world_to_cell(get_global_mouse_position())
-		
-		for ac in current_acs:
-			if cell == ac.end_point:
-				if current_unit.has_moved:
-					current_unit.has_attacked = true
-					await _process_attack(ac)
-				else:
-					current_unit.move_along_path(ac.path + [ac.end_point])
-					await current_unit.movement_complete
-					current_unit.has_moved = true
-				update_status()
-				return
-				
-	if event is InputEventKey and event.pressed and event.keycode == KEY_TAB:
-		var unit = _get_next_unit_in_group()
-		if unit == null:
-			print("No more units, thats strage")
-		current_unit = unit
-		_begin_turn()
-
-func _process_attack(ac: ActionInstance):
-	current_unit.attack(ac)
-	await current_unit.attack_complete
+func process_attack(ac: ActionInstance, attacker: Unit):
+	attacker.attack(ac)
+	await attacker.attack_complete
+	var children = []
+	for group in groups:
+		children.append_array(group.get_active_units())
 	for cell in ac.path:
-		var children = []
-		for group in groups:
-			children.append_array(group.get_children())
-		for child in children:
-			if child.cell == cell:
-				if child != current_unit:
-					child.health -= 1
+		for child: Unit in children:
+			if child.cell != cell:
+				continue
+			if child != attacker:
+				child.health -= 1
 
-func update_status() -> void:
-	if current_unit.has_attacked and current_unit.has_moved:
-		_step_turn()
-	else:
-		_update_paths()
-
-func _get_next_unit_in_group():
-	var next_index = current_unit_index
-
-	var next_unit: Unit
+func group_done() -> void:
+	if !battle_in_progress:
+		print('Game over!')
+		return
+		
+	var prev_group_index = current_group_index
 	
 	while true:
-		next_index = wrapi(next_index + 1, 0, current_group.get_child_count())
-		next_unit = current_group.get_child(next_index)
-		if next_unit.has_moved && next_unit.has_attacked:
-			if current_unit_index == next_index:
-				return null
-			next_unit = null
-			continue
-		
-		current_unit_index = next_index
-		print(current_unit_index)
-		return next_unit
-
-func _step_turn() -> void:
-	var prev_group_index = current_group_index			
-	var prev_index = current_unit_index
-	
-	var next_unit: Unit
-	
-	next_unit = _get_next_unit_in_group()
-	while next_unit == null && true:
 		current_group_index = wrapi(current_group_index + 1, 0, groups.size())
 		current_group = groups[current_group_index]
-		current_unit_index = 0
-		print(current_unit_index)
-		
-		if prev_group_index == current_group_index and prev_index == current_unit_index:
-			next_unit = null
-			break
-		
-		if current_group.get_child(current_unit_index).is_active:
-			next_unit = current_group.get_child(current_unit_index)
-			break
-	
-	if current_group_index != prev_group_index:
-		for unit: Unit in groups[prev_group_index].get_children():
-			unit.finish_turn()
-	
-	if next_unit != null:
-		_begin_turn()
+		if current_group_index == prev_group_index:
+			print('cycle')
+			current_group = null
+			break;
+		if !current_group.get_active_units().is_empty():
+			break;
+
+	if current_group != null:
+		current_group.activate_group()
 	else:
-		print('no unit!')
-
-func _begin_turn() -> void:
-	current_unit = current_group.get_child(current_unit_index)
-	_update_paths()
-
-func _update_paths() -> void:
-	EventBus.show_move_path.emit(null)
-	if current_unit.has_moved:
-		current_acs = current_unit.get_attack_paths()
-		EventBus.show_attack_acs.emit(current_acs)
-		EventBus.show_move_acs.emit([])
-		return
-	
-	current_acs = current_unit.get_move_paths()
-	EventBus.show_move_acs.emit(current_acs)
-	EventBus.show_attack_acs.emit([])
+		print('Game over!')
+		EventBus.game_over.emit()

@@ -1,14 +1,15 @@
-[gd_scene load_steps=10 format=3 uid="uid://dv61bs82ppcx"]
+[gd_scene load_steps=11 format=3 uid="uid://dv61bs82ppcx"]
 
 [ext_resource type="Script" path="res://scenes/battle_example/battle.gd" id="1_g48xb"]
 [ext_resource type="TileSet" uid="uid://bhs3agn1mn0oo" path="res://src/maps/grass_open/grass_open_tileset.tres" id="2_4o5gu"]
 [ext_resource type="PackedScene" uid="uid://dik7k0k7k27bp" path="res://src/battle/units/units.tscn" id="2_5hg2x"]
 [ext_resource type="PackedScene" uid="uid://0r543lk32lwo" path="res://src/maps/highlights/cell_highlights.tscn" id="3_b2wmv"]
-[ext_resource type="PackedScene" uid="uid://bvh861ymx55wu" path="res://src/unit/unit.tscn" id="3_qxq8g"]
-[ext_resource type="Resource" uid="uid://dnye6eu2q8q5o" path="res://src/unit/definitions/archer.tres" id="6_bcf76"]
-[ext_resource type="Resource" uid="uid://di37b3hbh35g7" path="res://src/unit/definitions/mage.tres" id="6_hpbej"]
-[ext_resource type="Resource" uid="uid://cgkxdpau8vmsu" path="res://src/unit/definitions/peasant.tres" id="6_r3dr5"]
-[ext_resource type="Resource" uid="uid://da4gxe2vdp43a" path="res://src/unit/definitions/knight.tres" id="7_u5ntj"]
+[ext_resource type="PackedScene" uid="uid://bvh861ymx55wu" path="res://src/battle/units/unit/unit.tscn" id="3_qxq8g"]
+[ext_resource type="PackedScene" uid="uid://d3li2821r6mu7" path="res://src/battle/units/unit_group/player/player-controled-group.tscn" id="5_1sqtd"]
+[ext_resource type="Resource" uid="uid://dnye6eu2q8q5o" path="res://src/battle/units/unit/definitions/archer.tres" id="6_bcf76"]
+[ext_resource type="Resource" uid="uid://di37b3hbh35g7" path="res://src/battle/units/unit/definitions/mage.tres" id="6_hpbej"]
+[ext_resource type="Resource" uid="uid://cgkxdpau8vmsu" path="res://src/battle/units/unit/definitions/peasant.tres" id="6_r3dr5"]
+[ext_resource type="Resource" uid="uid://da4gxe2vdp43a" path="res://src/battle/units/unit/definitions/knight.tres" id="7_u5ntj"]
 
 [node name="battle" type="Node2D"]
 script = ExtResource("1_g48xb")
@@ -25,27 +26,25 @@ layer_0/tile_data = PackedInt32Array(0, 65536, 0, 1, 131072, 0, 2, 0, 0, 3, 0, 0
 unique_name_in_owner = true
 y_sort_enabled = true
 
-[node name="player" type="Node2D" parent="units"]
-y_sort_enabled = true
-
-[node name="unit3" parent="units/player" instance=ExtResource("3_qxq8g")]
-position = Vector2(65, 90)
-def = ExtResource("7_u5ntj")
-
-[node name="unit4" parent="units/player" instance=ExtResource("3_qxq8g")]
-position = Vector2(70, 101)
-def = ExtResource("6_bcf76")
-
-[node name="unit2" parent="units/player" instance=ExtResource("3_qxq8g")]
-position = Vector2(101, 91)
-def = ExtResource("6_hpbej")
-
-[node name="opponent" type="Node2D" parent="units"]
-y_sort_enabled = true
+[node name="opponent" parent="units" instance=ExtResource("5_1sqtd")]
 
 [node name="unit3" parent="units/opponent" instance=ExtResource("3_qxq8g")]
 position = Vector2(103, 112)
 def = ExtResource("6_r3dr5")
+
+[node name="olayer" parent="units" instance=ExtResource("5_1sqtd")]
+
+[node name="unit3" parent="units/olayer" instance=ExtResource("3_qxq8g")]
+position = Vector2(65, 90)
+def = ExtResource("7_u5ntj")
+
+[node name="unit4" parent="units/olayer" instance=ExtResource("3_qxq8g")]
+position = Vector2(70, 101)
+def = ExtResource("6_bcf76")
+
+[node name="unit2" parent="units/olayer" instance=ExtResource("3_qxq8g")]
+position = Vector2(101, 91)
+def = ExtResource("6_hpbej")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(87, 87)

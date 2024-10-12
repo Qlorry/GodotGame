@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://3n6ahq1lc5nh"]
+
+[ext_resource type="Script" path="res://src/battle/units/unit_group/AI/ai_controled_group.gd" id="1_k7nkj"]
+
+[node name="Ai-controled-group" type="Node2D"]
+script = ExtResource("1_k7nkj")
