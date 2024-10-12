@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dv61bs82ppcx"]
+[gd_scene load_steps=12 format=3 uid="uid://dv61bs82ppcx"]
 
 [ext_resource type="Script" path="res://scenes/battle_example/battle.gd" id="1_g48xb"]
 [ext_resource type="TileSet" uid="uid://bhs3agn1mn0oo" path="res://src/maps/grass_open/grass_open_tileset.tres" id="2_4o5gu"]
@@ -10,6 +10,7 @@
 [ext_resource type="Resource" uid="uid://di37b3hbh35g7" path="res://src/battle/units/unit/definitions/mage.tres" id="6_hpbej"]
 [ext_resource type="Resource" uid="uid://cgkxdpau8vmsu" path="res://src/battle/units/unit/definitions/peasant.tres" id="6_r3dr5"]
 [ext_resource type="Resource" uid="uid://da4gxe2vdp43a" path="res://src/battle/units/unit/definitions/knight.tres" id="7_u5ntj"]
+[ext_resource type="PackedScene" uid="uid://3n6ahq1lc5nh" path="res://src/battle/units/unit_group/AI/ai-controled-group.tscn" id="10_u3s24"]
 
 [node name="battle" type="Node2D"]
 script = ExtResource("1_g48xb")
@@ -26,9 +27,9 @@ layer_0/tile_data = PackedInt32Array(0, 65536, 0, 1, 131072, 0, 2, 0, 0, 3, 0, 0
 unique_name_in_owner = true
 y_sort_enabled = true
 
-[node name="opponent" parent="units" instance=ExtResource("5_1sqtd")]
+[node name="ai-opponent" parent="units" instance=ExtResource("10_u3s24")]
 
-[node name="unit3" parent="units/opponent" instance=ExtResource("3_qxq8g")]
+[node name="unit3" parent="units/ai-opponent" instance=ExtResource("3_qxq8g")]
 position = Vector2(103, 112)
 def = ExtResource("6_r3dr5")
 

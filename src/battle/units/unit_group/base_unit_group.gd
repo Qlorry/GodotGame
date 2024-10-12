@@ -49,14 +49,15 @@ func _finish_turn():
 	current_unit_index = 0
 	units_container.group_done()
 
-func _next_unit():
+func _next_unit() -> bool:
 	var next_unit = _get_next_unacted_unit()
 	if next_unit == null:
 		_finish_turn()
-		return
+		return false
 	current_unit = next_unit[0]
 	current_unit_index = next_unit[1]
 	_update_paths()
+	return true
 	
 func _step():
 	if current_unit.has_attacked and current_unit.has_moved:

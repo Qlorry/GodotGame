@@ -36,3 +36,6 @@ func get_attack_paths() -> Array:
 
 func get_move_paths() -> Array:
 	return _filter_acs(unit.def.move_definitions.map(func (def): return def.to_action_instance(unit) as ActionInstance))
+
+func get_attack_paths_raw() -> Array:
+	return unit.def.ability_definitions

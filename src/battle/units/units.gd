@@ -14,7 +14,7 @@ func _ready() -> void:
 
 func start_battle() -> void:
 	current_group = groups[current_group_index]
-	current_group.activate_group()
+	await current_group.activate_group()
 
 func get_active_units() -> Array[Unit]:
 	var units: Array[Unit] = []
@@ -59,3 +59,10 @@ func group_done() -> void:
 	else:
 		print('Game over!')
 		EventBus.game_over.emit()
+
+func get_enemy_units(me: BaseUnitGroup) -> Array[Unit]:
+	var all: Array[Unit] = []
+	for item in groups:
+		if item != me:
+			all.append_array(item.get_active_units())
+	return all

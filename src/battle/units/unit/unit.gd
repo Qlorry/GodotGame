@@ -89,6 +89,9 @@ func finish_turn() -> void:
 func get_attack_paths() -> Array:
 	return abilities_db.get_attack_paths()
 
+func get_attack_paths_raw() -> Array:
+	return abilities_db.get_attack_paths_raw()
+
 func get_move_paths() -> Array:
 	return abilities_db.get_move_paths()
 
