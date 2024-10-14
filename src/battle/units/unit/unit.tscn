@@ -11,12 +11,13 @@ script = ExtResource("1_tvmcd")
 
 [node name="health_bar" parent="." instance=ExtResource("4_k8hat")]
 unique_name_in_owner = true
+z_index = 1
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
 position = Vector2(0, -15)
 sprite_frames = ExtResource("3_viucn")
-animation = &"attack"
+animation = &"hit"
 
 [node name="abilities_db" parent="." instance=ExtResource("3_swa4a")]
 unique_name_in_owner = true
