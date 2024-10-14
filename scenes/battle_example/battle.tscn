@@ -27,25 +27,29 @@ layer_0/tile_data = PackedInt32Array(0, 65536, 0, 1, 131072, 0, 2, 0, 0, 3, 0, 0
 unique_name_in_owner = true
 y_sort_enabled = true
 
+[node name="player" parent="units" instance=ExtResource("5_1sqtd")]
+
+[node name="unit3" parent="units/player" instance=ExtResource("3_qxq8g")]
+position = Vector2(65, 90)
+def = ExtResource("7_u5ntj")
+
+[node name="unit4" parent="units/player" instance=ExtResource("3_qxq8g")]
+position = Vector2(70, 101)
+def = ExtResource("6_bcf76")
+
+[node name="unit2" parent="units/player" instance=ExtResource("3_qxq8g")]
+position = Vector2(101, 91)
+def = ExtResource("6_hpbej")
+
 [node name="ai-opponent" parent="units" instance=ExtResource("10_u3s24")]
 
 [node name="unit3" parent="units/ai-opponent" instance=ExtResource("3_qxq8g")]
 position = Vector2(103, 112)
 def = ExtResource("6_r3dr5")
 
-[node name="olayer" parent="units" instance=ExtResource("5_1sqtd")]
-
-[node name="unit3" parent="units/olayer" instance=ExtResource("3_qxq8g")]
-position = Vector2(65, 90)
-def = ExtResource("7_u5ntj")
-
-[node name="unit4" parent="units/olayer" instance=ExtResource("3_qxq8g")]
-position = Vector2(70, 101)
-def = ExtResource("6_bcf76")
-
-[node name="unit2" parent="units/olayer" instance=ExtResource("3_qxq8g")]
-position = Vector2(101, 91)
-def = ExtResource("6_hpbej")
+[node name="unit4" parent="units/ai-opponent" instance=ExtResource("3_qxq8g")]
+position = Vector2(119, 111)
+def = ExtResource("6_r3dr5")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(87, 87)

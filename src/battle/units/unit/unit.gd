@@ -86,13 +86,13 @@ func finish_turn() -> void:
 	has_attacked = false
 	has_moved = false
 
-func get_attack_paths() -> Array:
+func get_attack_paths() -> Array[ActionInstance]:
 	return abilities_db.get_attack_paths()
 
-func get_attack_paths_raw() -> Array:
+func get_attack_paths_raw() -> Array[ActionDefinition]:
 	return abilities_db.get_attack_paths_raw()
 
-func get_move_paths() -> Array:
+func get_move_paths() -> Array[ActionInstance]:
 	return abilities_db.get_move_paths()
 
 func _set_health(value: int) -> void:

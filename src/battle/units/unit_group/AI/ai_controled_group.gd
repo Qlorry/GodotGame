@@ -34,28 +34,23 @@ func _handle_unit():
 	var enemy_pos = enemies.map(func(a:Unit): return a.cell)
 	
 	# if we can not hit them -> move to first, hit any cell
-	var final_strategy = null # TODO: create default move here as in comment above
+	var final_strategy = null
 
 	for e in enemies:		
 		final_strategy = _calc_along_path_strat(e.cell, enemy_pos)
 		if final_strategy != null:
 			break
-		#if my_current_pos.distance_to(e.cell) == 1: # we are close up
-			#var close_up_startegy = _calculate_close_up_attack(e.cell, enemy_pos)
-			#if close_up_startegy != null:
-				#final_strategy = close_up_startegy
-				#break
-		#else: # we must walk
-			## maybe we do not have to check all enemies, if we are too far for closest, I dont think we will reach others
-			#var walk_startegy = _calculate_path_attack(e.cell, enemy_pos)
-			#if walk_startegy != null:
-				#final_strategy = walk_startegy
-				#break
+
+	if final_strategy == null:
+		final_strategy = _get_default_move(enemies[0].cell)
 	
-	current_unit.move_along_path(final_strategy[0].path)
-	await current_unit.movement_complete
+	if final_strategy[0] != null:
+		current_unit.move_along_path(final_strategy[0].path)
+		await current_unit.movement_complete
 	current_unit.has_moved = true
 	
+	_update_paths()
+
 	await units_container.process_attack(final_strategy[1], current_unit)
 	current_unit.has_attacked = true
 
@@ -65,28 +60,81 @@ func _calc_along_path_strat(selected_enemy_pos: Vector2, enemy_positions: Array)
 	var move_options = current_unit.get_move_paths()
 	var attack_options = current_unit.get_attack_paths_raw()
 	
-	for move_option in move_options:	
+	for move_option in move_options:
+		var path = []
 		for move_tr in move_option.path:
+			path.append(move_tr)
 			var next_pos = move_tr
 			if !_is_valid_move_loc(next_pos, enemy_positions):
 				continue
 			
 			for attack_option in attack_options:
+				var attack_path = []
 				for attack_transform in attack_option.path:
+					attack_path.append(attack_transform)
 					# may hit the wall
-					if selected_enemy_pos == next_pos + attack_transform:
-						var ac = ActionInstance.new(attack_option, current_unit)
-						ac.path = attack_option.path.map(
-							func (cell):
-								return cell + next_pos
-						)
-						ac.end_point = attack_option.end_point + next_pos
+					if selected_enemy_pos != next_pos + attack_transform:
+						continue
 						
-						return [move_option, ac]
+					var attack_instance = ActionInstance.new(attack_option, current_unit)
+					attack_instance.path = attack_option.path.map(
+						func (cell):
+							return cell + next_pos
+					)
+					attack_instance.end_point = attack_path.back() + next_pos
+					
+					var move_instance: ActionInstance = ActionInstance.new(move_option.definition, current_unit)
+					move_instance.path = path
+					move_instance.end_point = path.back()
+					
+					return [move_instance, attack_instance]
 					
 	return null
 
-
+func _get_default_move(selected_enemy_pos: Vector2):
+	var current_pos = current_unit.cell
+	var move_options = current_unit.get_move_paths()
+	var attack_options = current_unit.get_attack_paths_raw()
+	
+	var closest_move_option: ActionInstance = null
+	var smallest_dist = 1000000
+	
+	for move_option in move_options:
+		var path = []
+		for move_tr in move_option.path:
+			path.append(move_tr)
+			var navigation = Navigation.grid.get_point_path(move_tr, selected_enemy_pos)
+			if smallest_dist > navigation.size():
+				smallest_dist = navigation.size()
+				closest_move_option = ActionInstance.new(move_option.definition, current_unit)
+				closest_move_option.path = path
+				closest_move_option.end_point = path.back()
+	
+	var comrades: Array[Unit] = get_active_units()
+	comrades.erase(current_unit)
+	
+	for attack_option in attack_options:
+		var hits_comrade = false
+		for attack_transform in attack_option.path:
+			for c in comrades:
+				if c.cell == attack_transform + closest_move_option.end_point:
+					hits_comrade = true;
+					break;
+		if !hits_comrade: 
+			var attack_instance = ActionInstance.new(attack_option, current_unit)
+			attack_instance.path = attack_option.path.map(
+				func (cell):
+					return cell + closest_move_option.end_point
+			)
+			attack_instance.end_point = attack_option.end_point + closest_move_option.end_point
+			return [closest_move_option, attack_instance]
+	var attack_instance = ActionInstance.new(attack_options[0], current_unit)
+	attack_instance.path = attack_options[0].path.map(
+		func (cell):
+			return cell + closest_move_option.end_point
+	)
+	attack_instance.end_point = attack_options[0].end_point + closest_move_option.end_point
+	return [closest_move_option, attack_instance]
 
 
 

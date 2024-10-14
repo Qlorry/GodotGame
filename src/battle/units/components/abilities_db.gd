@@ -31,11 +31,21 @@ func _filter_acs(acs: Array) -> Array:
 	
 	return valid
 
-func get_attack_paths() -> Array:
-	return _filter_acs(unit.def.ability_definitions.map(func (def): return def.to_action_instance(unit) as ActionInstance))
+func get_attack_paths() -> Array[ActionInstance]:
+	var filtered = _filter_acs(
+		unit.def.ability_definitions.map(func (def): return def.to_action_instance(unit) as ActionInstance))
+	var res: Array[ActionInstance] = []
+	for action in filtered:
+		res.append(action as ActionInstance)
+	return res
 
-func get_move_paths() -> Array:
-	return _filter_acs(unit.def.move_definitions.map(func (def): return def.to_action_instance(unit) as ActionInstance))
+func get_move_paths() -> Array[ActionInstance]:
+	var filtered = _filter_acs(
+		unit.def.move_definitions.map(func (def): return def.to_action_instance(unit) as ActionInstance))
+	var res: Array[ActionInstance] = []
+	for action in filtered:
+		res.append(action as ActionInstance)
+	return res
 
-func get_attack_paths_raw() -> Array:
+func get_attack_paths_raw() -> Array[ActionDefinition]:
 	return unit.def.ability_definitions
