@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://bsgxm4ohpghy4"]
+
+[ext_resource type="Texture2D" uid="uid://fidpppsxqbwj" path="res://src/assets/Tiny Swords (Update 010)/UI/Banners/Banner_Connection_Down.png" id="1_2b0qy"]
+[ext_resource type="Texture2D" uid="uid://ca4ffk6b24ayq" path="res://src/assets/Tiny Swords (Update 010)/UI/Buttons/Button_Blue.png" id="1_apxj7"]
+[ext_resource type="Texture2D" uid="uid://cj3ikjpiao8ou" path="res://src/assets/Tiny Swords (Update 010)/UI/Buttons/Button_Blue_Pressed.png" id="2_u3p37"]
+[ext_resource type="Texture2D" uid="uid://ds28vmb5npxxf" path="res://src/assets/Tiny Swords (Update 010)/UI/Buttons/Button_Disable.png" id="4_nae68"]
+
+[node name="Ui" type="Node2D"]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_top = 1.0
+offset_right = 192.0
+offset_bottom = 193.0
+texture = ExtResource("1_2b0qy")
+
+[node name="HFlowContainer" type="HFlowContainer" parent="."]
+offset_left = 51.0
+offset_top = 68.0
+offset_right = 596.0
+offset_bottom = 315.0
+
+[node name="TextureButton" type="TextureButton" parent="HFlowContainer"]
+layout_mode = 2
+texture_normal = ExtResource("1_apxj7")
+texture_pressed = ExtResource("2_u3p37")
+texture_disabled = ExtResource("4_nae68")
